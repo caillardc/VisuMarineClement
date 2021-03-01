@@ -1,0 +1,32 @@
+{
+    "id": "705214C1",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1614631851749.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "expression": "musee",
+        "caption": "musee",
+        "totalObservations": "693",
+        "displayedObservations": "693",
+        "variables": "34",
+        "cacheKey": "8B72A7ED",
+        "object": "musee",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=musee&cache_key=8B72A7ED&max_cols=50",
+        "preview": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 2466321595108783214,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1614631851749,
+    "read_only": false,
+    "read_only_alternatives": []
+}

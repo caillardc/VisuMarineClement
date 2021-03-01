@@ -3,13 +3,16 @@
     "path": "C:/Users/Marine Hamelin/Dropbox/M1MAS/S2/projet_visualisation/VisuMarineClement/VisuMarineClement/Rmusee/rmusee/app.R",
     "project_path": "app.R",
     "type": "r_source",
-    "hash": "2537797247",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1614631046492.0,
     "source_on_save": false,
     "relative_order": 1,
-    "properties": {},
+    "properties": {
+        "cursorPosition": "37,33",
+        "scrollLine": "27"
+    },
     "folds": "",
     "lastKnownWriteTime": 1614630736,
     "encoding": "UTF-8",

@@ -1,0 +1,3 @@
+library(tidyverse)
+region <- musee %>% group_by(,region) %>% summarise( region = unique(region))
+region[1,]

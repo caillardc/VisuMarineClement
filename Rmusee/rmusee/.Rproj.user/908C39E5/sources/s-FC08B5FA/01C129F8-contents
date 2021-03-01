@@ -26,6 +26,18 @@ shinyUI(fluidPage(
     tabPanel(title = 'Cartographie',
              'here carte des musée de France'),
     tabPanel(title = 'Statistique descriptive',
-             'here stats des')
+             column(width = 3,
+                    wellPanel(
+                      sliderInput("annee",
+                                  "Années :",
+                                  min = 2013,
+                                  max = 2018,
+                                  value = 2018,
+                                  step = 1,
+                                  sep = ''),
+                      selectInput(inputId = "region", 
+                                  label = "Sélectionner une région :", 
+                                  choices = musee %>% group_by(,region) %>% summarise(region = unique(region)))
+                    )))
   )
 ))
