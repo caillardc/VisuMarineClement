@@ -7,11 +7,13 @@ output: html_document
 
 ```{r}
 library(leaflet)
+library(tidyverse)
+setwd("C:/Users/caill/Dropbox/M1/S2/R/VISUDATA/Projet/VisuMarineClement")
 musee <- read_csv('musee.csv')
 ```
 
 
 ```{r}
-
+leaflet(musee) %>% addTiles() %>% addMarkers(~lon, ~lat, clusterOptions = markerClusterOptions(), clusterId = "cluster1")
 ```
 
