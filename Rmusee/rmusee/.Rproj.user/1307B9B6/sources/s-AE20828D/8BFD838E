@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1614622005032.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2874866067",
+    "id" : "8BFD838E",
+    "lastKnownWriteTime" : 1614621522,
+    "last_content_update" : 1614621522,
+    "path" : "C:/Users/caill/Dropbox/M1/S2/R/VISUDATA/Projet/VisuMarineClement/Rmusee/rmusee/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
