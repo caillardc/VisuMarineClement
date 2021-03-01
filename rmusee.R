@@ -32,5 +32,4 @@ museefreq <-  museefreq %>% filter(lon > (-20) & lon < 25)
 loc_musee <- read_delim('liste-et-localisation-des-musees-de-france.csv',delim = ';')
 loc_musee <- loc_musee %>% select(c(2,6,8,14,15))
 musee <- inner_join(loc_musee, museefreq, by = c('ref_musee'='id'))µ
-#TEST BG
-#non pas bg
+
