@@ -29,28 +29,29 @@ shinyUI(fluidPage(
              'here carte des musée de France'),
     tabPanel(title = 'Statistique descriptive',
              fluidRow(column(width = 4,
-                             wellPanel(style = "background-color: #fff; border-color: #2c3e50; height: 200px;",
-                                       sliderInput("annee",
-                                                   "Années :",
-                                                   min = 2013,
-                                                   max = 2018,
-                                                   value = 2018,
-                                                   step = 1,
-                                                   sep = ''),
-                                       selectInput(inputId = "region", 
-                                                   label = "Sélectionner une région :", 
-                                                   choices = musee %>% group_by(region) %>% summarise(region = unique(region)))
-                             )
-             )
-             ),
+                    wellPanel(style = "background-color: #fff; border-color: #2c3e50;",
+                              sliderInput("annee",
+                                          "Années :",
+                                          min = 2013,
+                                          max = 2018,
+                                          value = 2018,
+                                          step = 1,
+                                          sep = ''),
+                              selectInput(inputId = "region", 
+                                          label = "Sélectionner une région :", 
+                                          choices = musee %>% group_by(region) %>% summarise(region = unique(region)))
+                    )),
+             column(6,
+                    plotOutput(outputId = 'histo'))),
              fluidRow(column(4,
-                             wellPanel(style = "background-color: #fff; border-color: #2c3e50; height: 200px;",
-                                       selectInput(inputId = "département", 
-                                                   label = "Sélectionner un département :", 
-                                                   choices = musee %>% group_by(departement) %>% summarise(departement = unique(departement)))
-                             )
-                             )
-             )
+                    wellPanel(style = "background-color: #fff; border-color: #2c3e50;",
+                              selectInput(inputId = "département", 
+                                          label = "Sélectionner un département :", 
+                                          choices = musee %>% group_by(departement) %>% summarise(departement = unique(departement)))
+                    )
+             ))
+             
+             
              
     )
   )

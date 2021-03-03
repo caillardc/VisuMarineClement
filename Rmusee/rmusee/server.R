@@ -12,14 +12,16 @@ library(shiny)
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
-    output$distPlot <- renderPlot({
+    output$histo <- renderPlot({
 
         # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+        col.annee = paste('total.',as.numeric(input$annee), sep = '')
+        print(col.annee)
+        x  <- musee[musee$region == as.character(input$region),col.annee]
+        print(x[[col.annee]])
 
         # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white')
+        hist(x[[col.annee]], col = 'darkgray', border = 'white')
 
     })
 
