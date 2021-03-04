@@ -20,9 +20,10 @@ shinyServer(function(input, output) {
         col.annee = paste('total.',as.numeric(input$annee), sep = '')
         print(col.annee)
         x  <- musee[musee$region == as.character(input$region),col.annee]
-        bins <- seq(min(x), max(x), length.out = 5)
         # draw the histogram with the specified number of bins
-        amHist(x[[col.annee]], col = 'darkgray', border = 'white')
+        amHist(x[[col.annee]], freq = T, border = 'blue', 
+               main = paste('Histogramme de la fréquentation des musées en',input$annee), xlab = 'Nombre de visites',
+               zoom = T)
         
     })
     output$table <- renderDT({datatable(musee[musee$departement == input$dpt, c(7,11,19)],
@@ -42,6 +43,13 @@ shinyServer(function(input, output) {
                                                       mean(total.2017),
                                                       mean(total.2018))
         
-        amPlot(c(2013:2018),as.numeric(x[x$region == input$region,c(2,3,4,5,6,7)]), type = 'l')})
+        amPlot(as.character(c(2013:2018)),
+               as.numeric(x[x$region == input$region,c(2,3,4,5,6,7)]), 
+               type = 'l', sep = '', 
+               zoom = T, 
+               main = paste('Evolution de la fréquentation des musées en',input$region),
+               ylab = 'Nombre de visites',
+               xlab = 'Année',
+               lwd = 2)})
     
 })

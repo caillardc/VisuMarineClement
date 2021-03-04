@@ -33,7 +33,7 @@ shinyUI(fluidPage(
              fluidRow(column(width = 4,
                              wellPanel(style = "background-color: #fff; border-color: #2c3e50",
                                        sliderInput("annee",
-                                                   "Années :",
+                                                   "Année :",
                                                    min = 2013,
                                                    max = 2018,
                                                    value = 2018,
