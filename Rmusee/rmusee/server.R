@@ -8,6 +8,7 @@
 #
 
 library(shiny)
+library(DT)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -24,5 +25,14 @@ shinyServer(function(input, output) {
         hist(x[[col.annee]], col = 'darkgray', border = 'white')
 
     })
+    output$table <- renderDT({datatable(musee[musee$departement == input$dpt, c(7,11,19)],
+                                        options = list(info = F,
+                                                       paging = F,
+                                                       searching = T,
+                                                       stripeClasses = F, 
+                                                       lengthChange = F,
+                                                       scrollY = '300px',
+                                                       scrollCollapse = T),
+                                        rownames = F)})
 
 })
