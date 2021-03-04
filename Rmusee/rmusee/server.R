@@ -21,7 +21,7 @@ shinyServer(function(input, output) {
         print(col.annee)
         x  <- musee[musee$region == as.character(input$region),col.annee]
         # draw the histogram with the specified number of bins
-        amHist(x[[col.annee]], freq = T, border = 'blue', 
+        amHist(x[[col.annee]], freq = T, col = '#26C4EC', 
                main = paste('Histogramme de la fréquentation des musées en',input$annee), xlab = 'Nombre de visites',
                zoom = T)
         
