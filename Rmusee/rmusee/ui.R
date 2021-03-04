@@ -50,8 +50,9 @@ shinyUI(fluidPage(
                                                        DTOutput(outputId = "table")
                                              )))
              ),
-             column(6,
-                    plotOutput(outputId = 'histo'))),
+             column(8,
+                    plotOutput(outputId = 'histo'),
+                    plotOutput(outputId = 'graph'))),
     )
     
     

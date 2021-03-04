@@ -19,7 +19,6 @@ shinyServer(function(input, output) {
         col.annee = paste('total.',as.numeric(input$annee), sep = '')
         print(col.annee)
         x  <- musee[musee$region == as.character(input$region),col.annee]
-        print(x[[col.annee]])
 
         # draw the histogram with the specified number of bins
         hist(x[[col.annee]], col = 'darkgray', border = 'white')
@@ -34,5 +33,15 @@ shinyServer(function(input, output) {
                                                        scrollY = '300px',
                                                        scrollCollapse = T),
                                         rownames = F)})
+    output$graph <- renderPlot({
+        x <- musee %>% group_by(region) %>% summarise(mean(total.2013),
+                                                      mean(total.2014),
+                                                      mean(total.2015),
+                                                      mean(total.2016),
+                                                      mean(total.2017),
+                                                      mean(total.2018))
+        plot(x = c(2013:2018), y = x[x$region == input$region,c(2,3,4,5,6,7)], type = 'l')
+    
+    })
 
 })
