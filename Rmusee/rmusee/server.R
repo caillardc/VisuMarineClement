@@ -9,20 +9,21 @@
 
 library(shiny)
 library(DT)
+library(rAmCharts)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-
-    output$histo <- renderPlot({
-
+    
+    output$histo <- renderAmCharts({
+        
         # generate bins based on input$bins from ui.R
         col.annee = paste('total.',as.numeric(input$annee), sep = '')
         print(col.annee)
         x  <- musee[musee$region == as.character(input$region),col.annee]
-
+        bins <- seq(min(x), max(x), length.out = 5)
         # draw the histogram with the specified number of bins
-        hist(x[[col.annee]], col = 'darkgray', border = 'white')
-
+        amHist(x[[col.annee]], col = 'darkgray', border = 'white')
+        
     })
     output$table <- renderDT({datatable(musee[musee$departement == input$dpt, c(7,11,19)],
                                         options = list(info = F,
@@ -33,15 +34,14 @@ shinyServer(function(input, output) {
                                                        scrollY = '300px',
                                                        scrollCollapse = T),
                                         rownames = F)})
-    output$graph <- renderPlot({
+    output$graph <- renderAmCharts({
         x <- musee %>% group_by(region) %>% summarise(mean(total.2013),
                                                       mean(total.2014),
                                                       mean(total.2015),
                                                       mean(total.2016),
                                                       mean(total.2017),
                                                       mean(total.2018))
-        plot(x = c(2013:2018), y = x[x$region == input$region,c(2,3,4,5,6,7)], type = 'l')
+        
+        amPlot(c(2013:2018),as.numeric(x[x$region == input$region,c(2,3,4,5,6,7)]), type = 'l')})
     
-    })
-
 })

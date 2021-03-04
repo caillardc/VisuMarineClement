@@ -10,6 +10,7 @@
 library(shiny)
 library(tidyverse)
 library(DT)
+library(rAmCharts)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -51,8 +52,8 @@ shinyUI(fluidPage(
                                              )))
              ),
              column(8,
-                    plotOutput(outputId = 'histo'),
-                    plotOutput(outputId = 'graph'))),
+                    amChartsOutput(outputId = 'histo'),
+                    amChartsOutput(outputId = 'graph'))),
     )
     
     
