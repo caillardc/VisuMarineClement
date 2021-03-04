@@ -44,7 +44,7 @@ shinyUI(fluidPage(
                                                    choices = musee %>% group_by(region) %>% summarise(region = unique(region)))
                              ),
                              fluidRow(column(12,
-                                             wellPanel(style = "background-color: #fff; border-color: #2c3e50; height: 485px;",
+                                             wellPanel(style = "background-color: #fff; border-color: #2c3e50; height: 525px",
                                                        selectInput(inputId = "dpt", 
                                                                    label = "Sélectionner un département :", 
                                                                    choices = musee %>% group_by(departement) %>% summarise(departement = unique(departement))),
