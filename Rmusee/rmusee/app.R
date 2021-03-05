@@ -1,32 +1,50 @@
 library(shiny)
 library(leaflet)
+library(RColorBrewer)
 
-shinyApp(
-  ui = fluidPage(
-    leafletOutput("map1"),
-    actionButton("add", "Add marker cluster"),
-    actionButton("clear", "Clear marker cluster"),
-    selectizeInput("remove1", "Remove markers", rownames(quakes), multiple = TRUE)
-  ),
-  server = function(input, output, session) {
-    output$map1 <- renderLeaflet({
-      leaflet() %>% addTiles() %>% setView(180, -24, 4)
-    })
-    observeEvent(input$add, {
-      leafletProxy("map1") %>% addMarkers(
-        data = quakes,
-        popup = ~sprintf("magnitude = %s", mag), layerId = rownames(quakes),
-        clusterOptions = markerClusterOptions(), clusterId = "cluster1"
-      )
-    })
-    observeEvent(input$clear, {
-      leafletProxy("map1") %>% clearMarkerClusters()
-    })
-    observe({
-      leafletProxy("map1") %>% removeMarkerFromCluster(input$remove1, "cluster1")
-    })
-    observe({
-      print(input$map1_marker_click)
-    })
-  }
+ui <- bootstrapPage(
+  tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
+  leafletOutput("map", width = "100%", height = "100%"),
 )
+
+server <- function(input, output, session) {
+  
+  output$map <- renderLeaflet({
+    # Use leaflet() here, and only include aspects of the map that
+    # won't need to change dynamically (at least, not unless the
+    # entire map is being torn down and recreated).
+    leaflet(musee) %>% addTiles() %>%
+      fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
+  })
+  
+  # Incremental changes to the map (in this case, replacing the
+  # circles when a new color is chosen) should be performed in
+  # an observer. Each independent set of things that can change
+  # should be managed in its own observer.
+  observe({
+    pal <- colorpal()
+    
+    leafletProxy("map", data = musee) %>%
+      addMarkers(~lon, ~lat, clusterOptions = markerClusterOptions(),
+                 clusterId = as.character(~region), popup = ~apply(musee, 1, fpopup),
+                 icon = icons(iconUrl = "https://www.flaticon.com/svg/vstatic/svg/1825/1825814.svg?token=exp=1614959202~hmac=7d5cc095f2d18eb057af69c77cd24f3e",
+                   iconWidth = 20, iconHeight = 95))
+  })
+  
+  # Use a separate observer to recreate the legend as needed.
+  # observe({
+  #   proxy <- leafletProxy("map", data = quakes)
+    
+    # Remove any existing legend, and only if the legend is
+    # enabled, create a new one.
+    # proxy %>% clearControls()
+    # if (input$legend) {
+    #   pal <- colorpal()
+    #   proxy %>% addLegend(position = "bottomright",
+    #                       pal = pal, values = ~mag
+#       )
+#     }
+#   })
+}
+
+shinyApp(ui, server)

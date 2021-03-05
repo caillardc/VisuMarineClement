@@ -9,11 +9,60 @@ output: html_document
 library(leaflet)
 library(tidyverse)
 setwd("C:/Users/caill/Dropbox/M1/S2/R/VISUDATA/Projet/VisuMarineClement")
-musee <- read_csv('musee.csv')
+# musee <- read.table('musee.csv', sep=",", header=T)
+```
+```{r}
+testurl <- function(texte){
+  for (chaine in strsplit(texte, " ")[[1]]){
+    if(grepl("^http" ,chaine)){return(chaine)}
+    if(grepl("^www.",chaine)){return(paste("http://", chaine, sep=""))}
+  }
+  return(F)
+}
+
+fpopup <- function(rdt){
+  rdt = data.frame(t(rdt))
+  popup = "
+  <head>
+ <style>
+ .leaflet-container a{
+  text-decoration:none;
+  margin-bottom:1;}
+    a:hover{color:Black}
+
+#txt{margin-left:5px;}
+#ad, #txt{
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 0;}
+.leaflet-container p{color:#293133;}
+ </style>
+</head><body>"
+  title = paste('<h3>', as.character(rdt$name), "</h3>")
+  if (testurl(rdt$sitweb) != F){
+    popup = popup %>% paste("<a href='", testurl(rdt$sitweb), "'>", title, "</a>", sep ="")
+  }else{
+    popup = popup %>% paste(title)
+  } 
+  popup = popup %>% paste('<p id="ad"><strong>Adresse:</strong></p>')
+  rdt = unite(rdt, "ad", number, street, sep=' ',na.rm = T)
+  if(is.na(rdt$postal_code)){
+    popup = popup %>% paste('<p id="txt">', rdt$ad , "<br>", rdt$city,"</p>", sep="")
+  }else{
+    popup = popup %>% paste('<p id="txt">', rdt$ad , "<br>", rdt$postal_code, " ", rdt$city,"</p>", sep="")
+  }
+  popup = popup %>% paste('<p><strong>Téléphone: </strong>', rdt$telephone1, "</p>", sep="")
+  popup = popup %>% paste('<p><strong>Total visiteur en 2018: </strong>', rdt$total.2018, "</p></body>", sep="")
+  return(popup)
+}
 ```
 
 
 ```{r}
-leaflet(musee) %>% addTiles() %>% addMarkers(~lon, ~lat, clusterOptions = markerClusterOptions(), clusterId = "cluster1")
+leaflet(musee) %>% addTiles() %>% addMarkers(~lon, ~lat, clusterOptions = markerClusterOptions(), clusterId = as.character(~region), popup = ~apply(musee, 1, fpopup), icon = icons(iconUrl = "https://www.flaticon.com/svg/vstatic/svg/1825/1825814.svg?token=exp=1614959202~hmac=7d5cc095f2d18eb057af69c77cd24f3e", iconWidth = 20, iconHeight = 95))
+
+# map1 <- leaflet() %>% addTiles() %>% setView(2.213749, 46.227638,5)
+# leafletProxy("map1") %>% addMarkers()
+# map1
 ```
 
