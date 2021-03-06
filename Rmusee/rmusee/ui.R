@@ -23,7 +23,7 @@ shinyUI(bootstrapPage(
                tags$div(class = 'structure',
                         tags$div(class = 'class1',
                                  tags$h1("Bienvenue sur notre application shiny"),
-                                 tags$p("Elle nous permet de visualiser les données que nous avons receuillies dans une base.")
+                                 tags$p("Elle nous permet de visualiser des données sur les musées de France que nous avons receuillies dans une base.")
                         ),
                         tags$div(class = 'class2',
                                  tags$h2('Représentation carthographique'),
