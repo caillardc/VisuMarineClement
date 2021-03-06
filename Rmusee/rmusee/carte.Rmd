@@ -30,6 +30,7 @@ fpopup <- function(rdt){
   margin-bottom:1;}
     a:hover{color:Black}
 
+h4{color:#0078A8}
 #txt{margin-left:5px;}
 #ad, #txt{
     display: inline-block;
@@ -38,7 +39,7 @@ fpopup <- function(rdt){
 .leaflet-container p{color:#293133;}
  </style>
 </head><body>"
-  title = paste('<h3>', as.character(rdt$name), "</h3>")
+  title = paste('<h4>', as.character(rdt$name), "</h4>")
   if (testurl(rdt$sitweb) != F){
     popup = popup %>% paste("<a href='", testurl(rdt$sitweb), "'>", title, "</a>", sep ="")
   }else{
@@ -57,12 +58,27 @@ fpopup <- function(rdt){
 }
 ```
 
-
 ```{r}
-leaflet(musee) %>% addTiles() %>% addMarkers(~lon, ~lat, clusterOptions = markerClusterOptions(), clusterId = as.character(~region), popup = ~apply(musee, 1, fpopup), icon = icons(iconUrl = "https://www.flaticon.com/svg/vstatic/svg/1825/1825814.svg?token=exp=1614959202~hmac=7d5cc095f2d18eb057af69c77cd24f3e", iconWidth = 20, iconHeight = 95))
-
-# map1 <- leaflet() %>% addTiles() %>% setView(2.213749, 46.227638,5)
-# leafletProxy("map1") %>% addMarkers()
-# map1
+if (!(require(jsonlite))) install.packages("jsonlite")
+mygeocode <- function(adresses){
+  # adresses est un vecteur contenant toutes les adresses sous forme de chaine de caracteres
+  nominatim_osm <- function(address = NULL){
+    ## details: http://wiki.openstreetmap.org/wiki/Nominatim
+    ## fonction nominatim_osm proposée par D.Kisler
+    if(suppressWarnings(is.null(address)))  return(data.frame())
+    tryCatch(
+      d <- jsonlite::fromJSON(
+        gsub('\\@addr\\@', gsub('\\s+', '\\%20', address),
+             'http://nominatim.openstreetmap.org/search/@addr@?format=json&addressdetails=0&limit=1')
+      ), error = function(c) return(data.frame())
+    )
+    if(length(d) == 0) return(data.frame())
+    return(c(as.numeric(d$lon), as.numeric(d$lat)))
+  }
+  tableau <- t(sapply(adresses,nominatim_osm))
+  colnames(tableau) <- c("lon","lat")
+  return(tableau)
+}
 ```
+
 
