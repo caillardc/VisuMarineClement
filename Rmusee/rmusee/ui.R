@@ -20,16 +20,27 @@ shinyUI(bootstrapPage(
     title = img(src = 'musee.jpg', height ='40px', align ="right", alt ='image'),
     tabPanel(title = 'Présentation',
              fluidRow(
-               column(3),
-               column(6,
-                      HTML("
-                        <h1>Bienvenue sur notre application shiny permettant de visualiser des donnees sur les musees de France</h1>")
-                      
+               tags$div(class = 'structure',
+                        tags$div(class = 'class1',
+                                 tags$h1("Bienvenue sur notre application shiny"),
+                                 tags$p("Elle nous permet de visualiser les données que nous avons receuillies dans une base.")
+                        ),
+                        tags$div(class = 'class2',
+                                 tags$h2('Représentation carthographique'),
+                                 tags$p('Chaque musée est représenté sur une carte interactive.')
+                        ),
+                        tags$div(class = 'class3',
+                                 tags$h2("Représentation graphique"),
+                                 tags$p("Nous avons également représenté les données avec des graphiques. 
+                                      Pour chaque région et département nous représentons la fréquentation dans les musées."),
+                                 img(src = 'graphe.PNG', height = '340px'))
+                        
+                        
                )
                
              )),
     tabPanel(title = 'Cartographie',
-             'here carte des musée de France'),
+             'here carte des musées de France'),
     tabPanel(title = 'Statistique descriptive',
              fluidRow(column(width = 4,
                              wellPanel(style = "background-color: #fff; border-color: #2c3e50",
