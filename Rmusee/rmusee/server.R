@@ -10,6 +10,7 @@
 library(shiny)
 library(DT)
 library(rAmCharts)
+library(leaflet)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -18,15 +19,16 @@ shinyServer(function(input, output) {
         
         # generate bins based on input$bins from ui.R
         col.annee = paste('total.',as.numeric(input$annee), sep = '')
-        print(col.annee)
-        x  <- musee[musee$region == as.character(input$region),col.annee]
+        x  <- musee[musee$region == as.character(input$region),]
+        x <- x %>% group_by(departement) %>% summarise(somme = sum(.data[[col.annee]]))
+        
         # draw the histogram with the specified number of bins
-        amHist(x[[col.annee]], freq = T, col = '#26C4EC', 
-               main = paste('Histogramme de la fréquentation des musées en',input$annee), xlab = 'Nombre de visites',
-               zoom = T)
+        amBarplot(x = 'departement', y = 'somme', data = x, col = '#26C4EC',
+               zoom = T, labelRotation = 45, main = paste("Nombre de visiteurs en", input$region,' en ', input$annee))
         
     })
     output$table <- renderDT({datatable(musee[musee$departement == input$dpt, c(7,11,19)],
+                                        colnames = c('Nom', 'Ville', '2018') ,
                                         options = list(info = F,
                                                        paging = F,
                                                        searching = T,

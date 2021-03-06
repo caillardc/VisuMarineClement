@@ -11,10 +11,11 @@ library(shiny)
 library(tidyverse)
 library(DT)
 library(rAmCharts)
+library(shinyWidgets)
+library(leaflet)
 
 # Define UI for application that draws a histogram
-shinyUI(fluidPage(
-  
+shinyUI(bootstrapPage(
   navbarPage(
     title = img(src = 'musee.jpg', height ='40px', align ="right", alt ='image'),
     tabPanel(title = 'Présentation',
@@ -22,7 +23,7 @@ shinyUI(fluidPage(
                column(3),
                column(6,
                       HTML("
-                        <h1> Première section de la présentation</h1>")
+                        <h1>Bienvenue sur notre application shiny permettant de visualiser des donnees sur les musees de France</h1>")
                       
                )
                
@@ -48,7 +49,8 @@ shinyUI(fluidPage(
                                                        chooseSliderSkin('Flat', color = '#26C4EC'),
                                                        selectInput(inputId = "dpt", 
                                                                    label = "Sélectionner un département :", 
-                                                                   choices = musee %>% group_by(departement) %>% summarise(departement = unique(departement))),
+                                                                   choices = musee %>% group_by(departement) %>% summarise(departement = unique(departement)),
+                                                                   selected = 'PARIS'),
                                                        DTOutput(outputId = "table")
                                              )))
              ),
