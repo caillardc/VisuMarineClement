@@ -1,91 +1,50 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
-library(rAmCharts)
+library(leaflet)
+library(RColorBrewer)
 
-# Define UI for application that draws a histogram
-ui <- fluidPage(
-  tags$head(
-    tags$style(HTML("h1{color: #1E90FF;}"))
-  ),
-  
-  # Application title
-  titlePanel("Old Faithful Geyser Data"),
-  
-  # Sidebar with a slider input for number of bins 
-  navbarPage(title = "My First App",
-             tabPanel(title = "Data",
-                      navlistPanel("Summary + table",
-                                   tabPanel("Summary", verbatimTextOutput("summary")),
-                                   tabPanel("Table", HTML("<h1> Tableau </h1>"),
-                                     dataTableOutput(outputId = "table")))),
-             tabPanel(title = "Visualisation", 
-                      fluidRow(
-                        column(width = 3,
-                               wellPanel(
-                                 sliderInput("bins",
-                                             "Number of bins:",
-                                             min = 1,
-                                             max = 50,
-                                             value = 30),
-                                 selectInput(inputId = "color", label = "Couleur :", choices = c("Rouge" = "red", "Vert" = "green", "Bleu" = "blue")),
-                                 textInput(inputId = "title", label = "Choisissez un titre", value = ""),
-                                 radioButtons(inputId = "Queen", label = "Choisissez une colonne", choices = colnames(faithful), selected = colnames(faithful)[1]),
-                                 actionButton("gograph", "Mise a jour")
-                               )
-                        ),
-                        # Show a plot of the generated distribution
-                        column(width = 9,
-                               tabsetPanel(id = "graphiques",
-                                 tabPanel("Histogramme", amChartsOutput("distPlot")),
-                                 tabPanel("Boxplot", amChartsOutput("boxplot"))
-                               )
-                        )
-                      )
-             ),
-             tabPanel(title = "A propos de nous",
-                      HTML("<p> Coucou on fait caca des papillons ! 
-                           <img src = 'Papillon.jpg' alt = 'Papillon'>
-                           </p>"))
-  )
+ui <- bootstrapPage(
+  tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
+  leafletOutput("map", width = "100%", height = "100%"),
 )
-# Define server logic required to draw a histogram
+
 server <- function(input, output, session) {
-  x <- reactive({
-    faithful[, input$Queen]})
-    output$distPlot <- renderAmCharts({
-      input$gograph
-    isolate({
-      #req(input$Queen)
-      # generate bins based on input$bins from ui.R
-      #x    <- faithful[, input$Queen]
-      #browser()
-      bins <- round(seq(min(x()), max(x()), length.out = input$bins + 1), 2)
-      
-      # draw the histogram with the specified number of bins
-      amHist(x(), control_hist = list(breaks = bins), col = input$color, border = 'white', main = input$title, export = TRUE, zoom = TRUE)
-    })
+  
+  output$map <- renderLeaflet({
+    # Use leaflet() here, and only include aspects of the map that
+    # won't need to change dynamically (at least, not unless the
+    # entire map is being torn down and recreated).
+    leaflet(musee) %>% addTiles() %>%
+      fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat))
   })
-  output$summary <- renderPrint({summary(faithful)})
-  output$table <- renderDataTable({faithful})
-  output$boxplot <- renderAmCharts({
-    input$gograph
-    isolate({
-      #req(input$Queen)
-      #x <- faithful[, input$Queen]
-      amBoxplot(x(), col = input$color, main = input$title)})
+  
+  # Incremental changes to the map (in this case, replacing the
+  # circles when a new color is chosen) should be performed in
+  # an observer. Each independent set of things that can change
+  # should be managed in its own observer.
+  observe({
+    pal <- colorpal()
+    
+    leafletProxy("map", data = musee) %>%
+      addMarkers(~lon, ~lat, clusterOptions = markerClusterOptions(),
+                 clusterId = as.character(~region), popup = ~apply(musee, 1, fpopup),
+                 icon = icons(iconUrl = "https://www.flaticon.com/svg/vstatic/svg/1825/1825814.svg?token=exp=1614959202~hmac=7d5cc095f2d18eb057af69c77cd24f3e",
+                   iconWidth = 20, iconHeight = 95))
   })
-  observeEvent(input$gograph, {
-    updateTabsetPanel(session, inputId = "graphiques", selected = "Histogramme")
-  })
+  
+  # Use a separate observer to recreate the legend as needed.
+  # observe({
+  #   proxy <- leafletProxy("map", data = quakes)
+    
+    # Remove any existing legend, and only if the legend is
+    # enabled, create a new one.
+    # proxy %>% clearControls()
+    # if (input$legend) {
+    #   pal <- colorpal()
+    #   proxy %>% addLegend(position = "bottomright",
+    #                       pal = pal, values = ~mag
+#       )
+#     }
+#   })
 }
 
-# Run the application 
-shinyApp(ui = ui, server = server)
+shinyApp(ui, server)
