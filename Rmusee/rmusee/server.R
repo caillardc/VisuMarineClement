@@ -85,12 +85,6 @@ shinyServer(function(input, output, session) {
             leafletProxy("map", data = musee) %>% setView(geo[1],geo[2], 12)
         }
     })
-    observe({
-        if(input$regioncarte!=""){
-            print(input$regioncarte)
-            leafletProxy("map", data = musee)
-        }
-    })
 })
 
 
