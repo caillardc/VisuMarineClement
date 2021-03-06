@@ -10,9 +10,10 @@
 library(shiny)
 library(DT)
 library(rAmCharts)
+library(leaflet)
 
 # Define server logic required to draw a histogram
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
     
     output$histo <- renderAmCharts({
         
@@ -51,5 +52,42 @@ shinyServer(function(input, output) {
                ylab = 'Nombre de visites',
                xlab = 'Année',
                lwd = 2)})
+    #Leaflet 
+    selectmusee <- reactive({
+        if(input$visite[2]==1000000){musee[musee$total.2018 >= input$visite[1],]}else{
+            musee[musee$total.2018 >= input$visite[1] & musee$total.2018 <= input$visite[2],]
+            
+        }
+    })
     
+    output$map <- renderLeaflet({
+        leaflet(musee) %>% addTiles() %>%
+            fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat)) %>% 
+            addMarkers(~lon, ~lat, clusterOptions = markerClusterOptions(),
+                       clusterId = "cluster", popup = ~apply(musee, 1, fpopup),
+                       icon = icons(iconUrl = "https://www.flaticon.com/svg/vstatic/svg/1825/1825814.svg?token=exp=1615029914~hmac=c363db1013f7d8ccd0c2d96a62886711",
+                                    iconWidth = 20, iconHeight = 95), layerId = ~ref_musee)
+    })
+    
+    observe({
+        remove <- if(input$regioncarte!="") as.vector(t(musee[musee$region != input$regioncarte, "ref_musee"])) else ""
+        if (!is.null(selectmusee())){
+            leafletProxy("map", data = selectmusee()) %>% clearMarkerClusters() %>%
+                addMarkers(~lon, ~lat, clusterOptions = markerClusterOptions(),
+                           clusterId = "cluster", popup = ~apply(selectmusee(), 1, fpopup),
+                           icon = icons(iconUrl = "https://www.flaticon.com/svg/vstatic/svg/1825/1825814.svg?token=exp=1615029914~hmac=c363db1013f7d8ccd0c2d96a62886711",
+                                        iconWidth = 20, iconHeight = 95), layerId = ~ref_musee) %>% 
+                removeMarkerFromCluster(remove, 'cluster')
+            }
+        if(input$zoom!=""){
+            geo = mygeocode(input$zoom)
+            leafletProxy("map", data = musee) %>% setView(geo[1],geo[2], 12)
+        }
+    })
+    observe({
+        if(input$regioncarte!=""){
+            print(input$regioncarte)
+            leafletProxy("map", data = musee)
+        }
+    })
 })
