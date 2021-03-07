@@ -18,30 +18,37 @@ library(shinythemes)
 
 # Define UI for application that draws a histogram
 shinyUI(bootstrapPage(
+  theme = shinytheme("sandstone"),
+  tags$style(type = "text/css", ".navbar-brand{padding: 12px 10px;}"),
   navbarPage(
     title = img(src = 'musee.jpg', height ='40px', align ="right", alt ='image'),
-    tabPanel(title = 'Présentation',
+    tabPanel(title = 'Présentation',  includeCSS("www/presentation.css"),
              fluidRow(
-               tags$div(class = 'structure',
-                        tags$div(class = 'class1',
-                                 tags$h1("Bienvenue sur notre application shiny"),
-                                 tags$p("Elle nous permet de visualiser des données sur les musées de France que nous avons receuillies dans une base.")
-                        ),
-                        tags$div(class = 'class2',
-                                 tags$h2('Représentation carthographique'),
-                                 tags$p('Chaque musée est représenté sur une carte interactive.')
-                        ),
-                        tags$div(class = 'class3',
-                                 tags$h2("Représentation graphique"),
-                                 tags$p("Nous avons également représenté les données avec des graphiques. 
-                                      Pour chaque région et département nous représentons la fréquentation dans les musées."),
-                                 img(src = 'graphe.PNG', height = '340px'))
-                        
+               div(class="structure",
+                   div(class = "container",
+                       
+                       div(id = 'welcome',
+                           tags$h1("Bienvenue sur notre application shiny"),
+                           tags$p("Elle nous permet de visualiser des données sur les musées de France que nous avons receuillies dans une base.")
+                       )),
+                   div(class = "container", id ="carte",
+                       div(class = "bloctxt", div(id = 'cartetxt',
+                                                  h2('Représentation carthographique'),
+                                                  p('Chaque musée est représenté sur une carte interactive.'))),
+                       div(class= "img", img(src = 'carte.PNG'))
+                   ),
+                   div(class = "container",
+                       div(class="img", img(src = 'graphe.PNG')),
+                       div(id = 'laimg',
+                           h2("Représentation graphique"),
+                           p("Nous avons également représenté les données avec des graphiques. 
+                                      Pour chaque région et département nous représentons la fréquentation dans les musées.")))
+                   
+                   
                ))),
              tabPanel(title = 'Cartographie',
-                      div(
-                        class = 'outer',  
-                        tags$style(type = "text/css", "div.outer {position: fixed; top: 50px; left: 0; right: 0; bottom: 0;}"),
+                      div(class = 'outer',  
+                        tags$style(type = "text/css", "div.outer {position: fixed; top: 55px; left: 0; right: 0; bottom: 0;}"),
                         tags$style(type = "text/css", "#controls {background-color: rgba(255,255,255,0.8); padding: 20px; border-radius: 8px}"),
                         tags$style(type = "text/css", "label {font-weight: 400;}"),
                         
@@ -50,6 +57,8 @@ shinyUI(bootstrapPage(
                                       sliderInput("visite", "Visiteurs en 2018 de 0 à plus de 1M", min(musee$total.2018), 1000000,
                                                   value = c(min(musee$total.2018), 1000000), step = 100),
                                       textInput('zoom', "Zoom sur une adresse", value = ""),
+                                      actionButton("button", "Recherche"),
+                                      p(""),
                                       selectInput(inputId = "regioncarte", 
                                                   label = "Sélectionner une région :", 
                                                   choices = c('', musee %>% group_by(region) %>% summarise(region = unique(region))))
