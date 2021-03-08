@@ -66,7 +66,7 @@ shinyUI(bootstrapPage(
                  )
              )
     ),
-    tabPanel(title = 'Statistique descriptive',
+    tabPanel(title = 'Graphiques',
              fluidRow(column(width = 4,
                              wellPanel(style = "background-color: #fff; border-color: #2c3e50",
                                        sliderInput("annee",
