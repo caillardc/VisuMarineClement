@@ -44,7 +44,7 @@ shinyServer(function(input, output, session) {
                                                       mean(total.2016),
                                                       mean(total.2017),
                                                       mean(total.2018))
-        
+
         amPlot(as.character(c(2013:2018)),
                as.numeric(x[x$region == input$region,c(2,3,4,5,6,7)]), 
                type = 'l', sep = '', 
@@ -60,28 +60,34 @@ shinyServer(function(input, output, session) {
             
         }
     })
-    
+
+    ladresse <- eventReactive(input$button, {input$zoom})
+
     output$map <- renderLeaflet({
         leaflet(musee) %>% addTiles() %>%
             fitBounds(~min(lon), ~min(lat), ~max(lon), ~max(lat)) %>% 
             addMarkers(~lon, ~lat, clusterOptions = markerClusterOptions(),
                        clusterId = "cluster", popup = ~apply(musee, 1, fpopup),
-                       icon = icons(iconUrl = "https://www.flaticon.com/svg/vstatic/svg/1825/1825814.svg?token=exp=1615029914~hmac=c363db1013f7d8ccd0c2d96a62886711",
+                       icon = icons(iconUrl = "museum.svg",
                                     iconWidth = 20, iconHeight = 95), layerId = ~ref_musee)
     })
     
     observe({
         remove <- if(input$regioncarte!="") as.vector(t(musee[musee$region != input$regioncarte, "ref_musee"])) else ""
-        if (!is.null(selectmusee())){
+        if (nrow(selectmusee())!=0){
             leafletProxy("map", data = selectmusee()) %>% clearMarkerClusters() %>%
                 addMarkers(~lon, ~lat, clusterOptions = markerClusterOptions(),
                            clusterId = "cluster", popup = ~apply(selectmusee(), 1, fpopup),
+
                            icon = icons(iconUrl = 'museum.svg',
+
+                           icon = icons(iconUrl = "museum.svg",
+
                                         iconWidth = 20, iconHeight = 95), layerId = ~ref_musee) %>% 
                 removeMarkerFromCluster(remove, 'cluster')
-            }
-        if(input$zoom!=""){
-            geo = mygeocode(input$zoom)
+        }else{leafletProxy("map", data = musee) %>% clearMarkerClusters()}
+        if(ladresse()!=""){
+            geo = mygeocode(ladresse())
             leafletProxy("map", data = musee) %>% setView(geo[1],geo[2], 12)
         }
     })

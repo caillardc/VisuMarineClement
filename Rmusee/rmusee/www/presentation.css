@@ -1,0 +1,53 @@
+.container{
+	padding-top: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #ddd;
+	width : 100%;
+    background: white;	
+}
+
+#laimg, .bloctxt,.img{
+	display: inline-block;
+	vertical-align: middle;
+	width : 49%;
+	height:100%;
+}
+
+.bloctxt{
+	padding-left:10%;
+	padding-right: 2rem;
+}
+
+.img {
+	height: 60%;
+	position: relative;
+	text-align: center;
+}
+
+.img img {
+	width: 100%; 
+	max-width: 50rem; 
+	box-shadow: 0.1rem 0.3rem 0.3rem rgba(0, 0, 0, 0.15);
+}
+
+#laimg{
+	padding-left: 2rem;
+}
+
+#cartetxt{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#welcome {
+	text-align: center;
+}
+
+.structure {
+	position: relative;
+	margin-top: -20px;
+}
+
+#carte{
+	background: #e6f1f3;
+}
