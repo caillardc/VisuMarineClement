@@ -2,16 +2,50 @@
 title: "Visualisation Musées de France"
 author: "Clément Caillard et Marine Hamelin"
 date: "08/03/2021"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
 ---
+```{r echo = F, message = F, warning = F}
+library(rAmCharts)
+library(tidyverse)
+```
 
 # Partie représentation graphiques
 ## Représentation par région
 
-  Cette page contient deux graphiques et un data table. Le but de cette application est de représenté la fréquentation des musées de France de 2013 à 2018.Tout d'abord nous avons trouvé pertinent de représenter les données avec un barplot. L'utilisateur sélectionne une région et une année, ensuite le barplot illustre pour chaque départements de la région le nombre de visiteurs totals de l'année sélectionné.C'est pourquoi nous avons trouvé ça pertinent de mettre un slider qui permet de choisir l'année et une bar déroulante pour sélectionner la région. Donc en abscisse nous retrouvons les départements de la région et en ordonnées le nombre de visiteurs d'une année.
+Cette page contient deux graphiques et un data table. Le but de cette application est de représenté la fréquentation des musées de France de 2013 à 2018.
   
-  Le deuxième graphique en bas décrit l'évolution des visiteurs sur la période 2013-2018 pour une région. Donc en haut quand l'utilisateur sélectionne une région, le graphique se met à jour et montre une courbe qui relit chaque point correspondant à la fréquentation des musées des années. 
-```{r}
+Tout d'abord nous avons trouvé pertinent de représenter les données avec un barplot. L'utilisateur sélectionne une région et une année, ensuite le barplot illustre pour chaque département de la région le nombre de visiteurs total de l'année sélectionné.C'est pourquoi nous avons trouvé ça pertinent de mettre un slider qui permet de choisir l'année et une bar déroulante pour sélectionner la région. Donc en abscisse nous retrouvons les départements de la région et en ordonnées le nombre de visiteurs d'une année. Nous hésitions au début à mettre un histogramme quireprésente la densité de visite pour une région mais cela aurait effacé les informations sur les départements que nous trouvions pertinentes à représenter.
 
+```{r message = F, echo = F}
+musee <- read.table('C:/Users/marin/Dropbox/M1MAS/S2/projet_visualisation/VisuMarineClement/VisuMarineClement/VisuMarineClement/musee.csv', header = T, sep = ',', dec = '.')
+x <- musee %>% group_by(region) %>% summarise(mean(total.2013),
+                                                      mean(total.2014),
+                                                      mean(total.2015),
+                                                      mean(total.2016),
+                                                      mean(total.2017),
+                                                      mean(total.2018))
+        
+amPlot(as.character(c(2013:2018)),
+               as.numeric(x[x$region == 'BRETAGNE',c(2,3,4,5,6,7)]), 
+               type = 'l', sep = '', 
+               zoom = T, 
+               main = paste('Evolution de la fréquentation des musées en BRETAGNE'),
+               ylab = 'Nombre de visites',
+               xlab = 'Année',
+               lwd = 2)
+```
+
+  
+  Le deuxième graphique en bas décrit l'évolution des visiteurs sur la période 2013-2018 pour une région. Donc en haut quand l'utilisateur sélectionne une région, le graphique se met à jour et montre une courbe qui relit chaque point correspondant à la fréquentation des musées pour chaque année. Par exemple on peut voir que sur le graphique en dessous, en Bretagne en 2018 il y a eu 395 581 milles personnes qui ont visité des musées dans le Finistère.
+```{r echo = F, message = F}
+x  <- musee[musee$region == as.character('BRETAGNE'),]
+x <- x %>% group_by(departement) %>% summarise(somme = sum(total.2018))
+        
+        # draw the histogram with the specified number of bins
+amBarplot(x = 'departement', y = 'somme', data = x, col = '#26C4EC',
+          zoom = T, labelRotation = 45, main = paste("Nombre de visiteurs en", 'BRETAGNE',' en ', '2018'))
 ```
 
