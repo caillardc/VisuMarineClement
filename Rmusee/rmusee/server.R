@@ -38,12 +38,12 @@ shinyServer(function(input, output, session) {
                                                        scrollCollapse = T),
                                         rownames = F)})
     output$graph <- renderAmCharts({
-        x <- musee %>% group_by(region) %>% summarise(mean(total.2013),
-                                                      mean(total.2014),
-                                                      mean(total.2015),
-                                                      mean(total.2016),
-                                                      mean(total.2017),
-                                                      mean(total.2018))
+        x <- musee %>% group_by(region) %>% summarise(sum(total.2013),
+                                                      sum(total.2014),
+                                                      sum(total.2015),
+                                                      sum(total.2016),
+                                                      sum(total.2017),
+                                                      sum(total.2018))
         
         amPlot(as.character(c(2013:2018)),
                as.numeric(x[x$region == input$region,c(2,3,4,5,6,7)]), 
