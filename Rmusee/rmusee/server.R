@@ -76,7 +76,7 @@ shinyServer(function(input, output, session) {
             leafletProxy("map", data = selectmusee()) %>% clearMarkerClusters() %>%
                 addMarkers(~lon, ~lat, clusterOptions = markerClusterOptions(),
                            clusterId = "cluster", popup = ~apply(selectmusee(), 1, fpopup),
-                           icon = icons(iconUrl = "https://www.flaticon.com/svg/vstatic/svg/1825/1825814.svg?token=exp=1615029914~hmac=c363db1013f7d8ccd0c2d96a62886711",
+                           icon = icons(iconUrl = 'museum.svg',
                                         iconWidth = 20, iconHeight = 95), layerId = ~ref_musee) %>% 
                 removeMarkerFromCluster(remove, 'cluster')
             }

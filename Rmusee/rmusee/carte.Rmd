@@ -8,7 +8,7 @@ output: html_document
 ```{r}
 library(leaflet)
 library(tidyverse)
-setwd("C:/Users/caill/Dropbox/M1/S2/R/VISUDATA/Projet/VisuMarineClement")
+#setwd("C:/Users/caill/Dropbox/M1/S2/R/VISUDATA/Projet/VisuMarineClement")
 # musee <- read.table('musee.csv', sep=",", header=T)
 ```
 ```{r}

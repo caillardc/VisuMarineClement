@@ -1,0 +1,32 @@
+#structure{
+	margin: 0;
+}
+
+#structure > .class1, .class2, .class3{
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+	border-bottom: 1px solid #ddd;
+	height: 30rem;
+	background: #e6f1f3;
+}
+
+#img{
+	float: right;
+	padding: 0;
+	top: 0;
+}
+
+h1, #p1{
+	text-align: center;
+}
+
+h2, .text{
+	width: 50%;
+	padding-left: 2rem$=
+	padding-right: 2rem;
+}
+
+.class2{
+	float: right;
+}
+	
