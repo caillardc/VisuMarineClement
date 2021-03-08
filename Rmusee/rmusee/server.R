@@ -84,7 +84,7 @@ shinyServer(function(input, output, session) {
                            icon = icons(iconUrl = "museum.svg",
 
                                         iconWidth = 20, iconHeight = 95), layerId = ~ref_musee) %>% 
-                removeMarkerFromCluster(remove, 'cluster'))
+                removeMarkerFromCluster(remove, 'cluster')
         }else{leafletProxy("map", data = musee) %>% clearMarkerClusters()}
         if(ladresse()!=""){
             geo = mygeocode(ladresse())
