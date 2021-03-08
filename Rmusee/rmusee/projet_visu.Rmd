@@ -1,0 +1,17 @@
+---
+title: "Visualisation Musées de France"
+author: "Clément Caillard et Marine Hamelin"
+date: "08/03/2021"
+output: pdf_document
+---
+
+# Partie représentation graphiques
+## Représentation par région
+
+  Cette page contient deux graphiques et un data table. Le but de cette application est de représenté la fréquentation des musées de France de 2013 à 2018.Tout d'abord nous avons trouvé pertinent de représenter les données avec un barplot. L'utilisateur sélectionne une région et une année, ensuite le barplot illustre pour chaque départements de la région le nombre de visiteurs totals de l'année sélectionné.C'est pourquoi nous avons trouvé ça pertinent de mettre un slider qui permet de choisir l'année et une bar déroulante pour sélectionner la région. Donc en abscisse nous retrouvons les départements de la région et en ordonnées le nombre de visiteurs d'une année.
+  
+  Le deuxième graphique en bas décrit l'évolution des visiteurs sur la période 2013-2018 pour une région. Donc en haut quand l'utilisateur sélectionne une région, le graphique se met à jour et montre une courbe qui relit chaque point correspondant à la fréquentation des musées des années. 
+```{r}
+
+```
+
