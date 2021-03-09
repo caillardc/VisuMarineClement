@@ -48,7 +48,7 @@ Pour finir, Nous avons sélectionné les musées qui se sitauient uniquement dan
 head(don)
 ```
 
-La base de données finales contient 693 lignes et 34 colonnes.
+La base de données finale contient 693 lignes et 34 colonnes.
 
 
   
