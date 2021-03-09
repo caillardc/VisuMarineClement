@@ -34,7 +34,8 @@ loc_musee <- loc_musee %>% select(c(2,6,8,14,15))
 musee <- inner_join(loc_musee, museefreq, by = c('ref_musee'='id'))
 
 write.csv(musee, 'musee.csv', fileEncoding = "UTF-8")
-mygeocode("villiers sur orge")
- 
 
+
+ifelse(TRUE, a <- as.vector(t(musee[musee$region != "", "ref_musee"])),a <-  "")
+a <- if(T) as.vector(t(musee[musee$region != "", "ref_musee"])) else ""
          

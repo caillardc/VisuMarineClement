@@ -10,17 +10,59 @@ output:
 ```{r echo = F, message = F, warning = F}
 library(rAmCharts)
 library(tidyverse)
+library(DT)
+```
+# Présentation du sujet et des données
+## Le sujet
+
+  Tout d'abord, nous voulions travailler sur des données qui nous permettraient de construire une carte. Il a fallu qu'on trouve une base de données avec des longitudes et des lattitudes. De plus nous voulions des données en rapport avec la culture. Donc nous sommes allés sur le site de data gouv et nous avons trouvé des bases de données sur la fréquentation des musées de France. Elles correspondaient à ce que nous recherchions. Cependant, il y en avait plusieurs, en effet il y avait une base pour chaque année entre 2013 et 2018. Nous avons donc décidé de réunir toutes les bases. Néanmoins nous n'étions pas assez satisfait, les seuls données quantitatives exceptés les données spatiales étaient celles correspondant à la fréquentation. De plus, les données qualitatives intéressantes étaient le nom des musées et son adresse. Nous voulions aussi faire une partie sur des représentations graphique et pas seulement une carte. Nous avons eu l'idée de regarder la fréquentation des musées par région et département. Donc, nous avons trouvé une autre base de données avec l'identifant du musée identique à celui de la base initiale, le département et la région et en bonus le site web du musée. Ainsi, avec cette nouvelle base on peut approfondire la visualisation des données.
+  
+## Nettoyage des données
+
+  Comme s'est écrit ci-dessus nous avons joint plusieurs tables pour construire la base de données finale. Tout d'abord pour chaque années nous avions une table qui ressemblait à ça:
+  
+```{r warning = F, echo = F, message = F}
+table <- read_csv('C:/Users/marin/Dropbox/M1MAS/S2/projet_visualisation/VisuMarineClement/VisuMarineClement/VisuMarineClement//frequentation-musees-de-france-2018.csv', locale=locale())
+
+table
+```
+Nous avons commencé par supprimer les colonnes qui ne nous intéressaient pas. Ce sont les suivantes: website, phone, fax, description, tags, year. Elles ne contenaient que des valeurs manquantes. 
+
+
+La partie qui nous intéressait le plus était la colonne stats car elle contient la fréquentation. Or, elle est mal structurée puisque c'est une chaîne de caractère qui regroupe le nombre d'entrée payante, le nombre d'entrée gratuite et un label date.
+
+```{r, echo = F, warning = F}
+table[1:5, 'stats']
+
+```
+Pour réussir à visulaliser les données il fallait donc restructurer cette colonne. Ainsi pour chaque table nous avons créé une colonne gratuit, payant et total. Nous ne trouvions pas pertinent de garder la date. Cependant nous spécifions l'année pour qu'une fois avoir fusionné toutes les tables, on puisse savoir à quelle années les données correspondent.
+
+```{r, echo = F, warning = F}
+don <- read.table('C:/Users/marin/Dropbox/M1MAS/S2/projet_visualisation/VisuMarineClement/VisuMarineClement/VisuMarineClement/musee.csv', header = T, sep = ',', dec = '.', encoding = 'UTF-8')
+
+don[1:5, c(17,18,19)]
+```
+Pour finir, Nous avons sélectionné les musées qui se sitauient uniquement dans la métropole française. Ensuite, nous avons fusionner cette base de données avec la base où est renseignée la région, le département, le numéro de téléphone et le site web. Nous gardons que les colonnes corespondant à ces informations. Nous avons donc la base de données finalisés suivantes:
+
+```{r, warning=F, echo=F}
+head(don)
 ```
 
-# Partie représentation graphiques
-## Représentation par région
+La base de données finales contient 693 lignes et 34 colonnes.
+
+
+  
+# Représentation graphiques
 
 Cette page contient deux graphiques et un data table. Le but de cette application est de représenté la fréquentation des musées de France de 2013 à 2018.
+
+## Barplot
   
-Tout d'abord nous avons trouvé pertinent de représenter les données avec un barplot. L'utilisateur sélectionne une région et une année, ensuite le barplot illustre pour chaque département de la région le nombre de visiteurs total de l'année sélectionné.C'est pourquoi nous avons trouvé ça pertinent de mettre un slider qui permet de choisir l'année et une bar déroulante pour sélectionner la région. Donc en abscisse nous retrouvons les départements de la région et en ordonnées le nombre de visiteurs d'une année. Nous hésitions au début à mettre un histogramme quireprésente la densité de visite pour une région mais cela aurait effacé les informations sur les départements que nous trouvions pertinentes à représenter. Par exemple on peut voir sur le graphe ci-dessous, en Bretagne en 2018 il y a eu 395 581 milles personnes qui ont visité des musées dans le Finistère.
+Tout d'abord nous avons trouvé pertinent de représenter les données avec un barplot. L'utilisateur sélectionne une région et une année, ensuite le barplot illustre pour chaque département de la région le nombre de visiteurs total de l'année sélectionnée .C'est pourquoi, nous avons trouvé ça pertinent de mettre un slider qui permet de choisir l'année et une bar déroulante pour sélectionner la région. La bar déroulante reprend les régions qui se trouve dans la colonne region de la base de données. Donc on a groupé les données par département de la région sélectionnée et fait la somme du nombre de visite qu'on retrouve dans les colonnes total.année. Ainsi, en abscisse nous retrouvons les départements de la région et en ordonnée le nombre de visiteurs d'une année. 
+
+Nous hésitions au début à mettre un histogramme représentant la densité de visite pour une région mais cela aurait effacé les informations sur les départements que nous trouvions pertinentes à représenter. Par exemple on peut voir sur le graphe ci-dessous, en Bretagne en 2018 il y a eu 395 581 milles personnes qui ont visité des musées dans le Finistère.
 
 ```{r message = F, echo = F}
-don <- read.table('C:/Users/marin/Dropbox/M1MAS/S2/projet_visualisation/VisuMarineClement/VisuMarineClement/VisuMarineClement/musee.csv', header = T, sep = ',', dec = '.')
 x  <- don[don$region == as.character('BRETAGNE'),]
 x <- x %>% group_by(departement) %>% summarise(somme = sum(total.2018))
         
@@ -29,11 +71,12 @@ amBarplot(x = 'departement', y = 'somme', data = x, col = '#26C4EC',
           zoom = T, labelRotation = 45, main = paste("Nombre de visiteurs en", 'BRETAGNE',' en ', '2018'))
 
 ```
+## Courbe d'évolution
+  Le deuxième graphique en bas décrit l'évolution des visiteurs sur la période 2013-2018 pour une région. Donc en haut quand l'utilisateur sélectionne une région, le graphique se met à jour et montre une courbe qui relit chaque point correspondant à la fréquentation des musées pour chaque année. Donc on a groupé les données par région et on a calculé la somme des visites par années pour chaque région. Ensuite nous gardons la ligne correspondant à la région sélectionnée par l'utilisateur.
 
-  
-  Le deuxième graphique en bas décrit l'évolution des visiteurs sur la période 2013-2018 pour une région. Donc en haut quand l'utilisateur sélectionne une région, le graphique se met à jour et montre une courbe qui relit chaque point correspondant à la fréquentation des musées pour chaque année.
+Ici, nous trouvions intéréssant de comparer la fréquentation entre chaque année puisque le barplot ne représente que les données pour une année. 
 ```{r echo = F, message = F}
-x <- don %>% group_by(region) %>% summarise(mean(total.2013),
+x <- don %>% group_by(region) %>% summarise(sum(total.2013),
                                                       sum(total.2014),
                                                       sum(total.2015),
                                                       sum(total.2016),
@@ -49,4 +92,22 @@ amPlot(as.character(c(2013:2018)),
                xlab = 'Année',
                lwd = 2)
 ```
+
+## Data table
+Ensuite, pour approfondire nous voulions nous intéresser aux départements. C'est pourquoi pour chaque départements nous avons construit un data table avec une première colonne correspondant au nom du musée, une deuxième colonne qui est la ville et une troisème colonne avec le nombre de visiteur en 2018. L'utilisateur sélectionne un département et cela met à jour le data table. Il peut également effectué une recherche dans celui-ci. 
+
+Nous aurions pû également faire deux boxplots par département représentant le nombre de visite gratuite et payante, mais il y a déjà deux graphiques sur la page. Nous ne voulions pas encombrer le site avec trop de graphique, c'est pourquoi nous avons préféré le data table.
+```{r}
+datatable(don[don$departement == 'PARIS', c(7,11,19)],
+                                        colnames = c('Nom', 'Ville', '2018') ,
+                                        options = list(info = F,
+                                                       paging = F,
+                                                       searching = T,
+                                                       stripeClasses = F, 
+                                                       lengthChange = F,
+                                                       scrollY = '300px',
+                                                       scrollCollapse = T),
+                                        rownames = F)
+```
+
 
