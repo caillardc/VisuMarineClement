@@ -18,6 +18,7 @@ library(shinythemes)
 
 # Define UI for application that draws a histogram
 shinyUI(bootstrapPage(
+  tags$head(HTML("<title>Musée en France</title><link rel='icon' type='image/gif/png' href='musee.jpg'>")),
   theme = shinytheme("sandstone"),
   tags$style(type = "text/css", ".navbar-brand{padding: 12px 10px;}"),
   navbarPage(
@@ -42,9 +43,12 @@ shinyUI(bootstrapPage(
                        div(id = 'laimg',
                            h2("Représentation graphique"),
                            p("Nous avons également représenté les données avec des graphiques. 
-                                      Pour chaque région et département nous représentons la fréquentation dans les musées.")))
+                                      Pour chaque région et département nous représentons la fréquentation dans les musées."))
+                       ),
                    
-                   
+                   div(class="footer",
+                       p("© Application shiny réalisée par Marine Hamelin et Clément Caillard")
+                      )
                ))),
     tabPanel(title = 'Cartographie',
              div(class = 'outer',  

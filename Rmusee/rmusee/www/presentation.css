@@ -51,3 +51,12 @@
 #carte{
 	background: #e6f1f3;
 }
+
+.footer{
+	background-color: #3e3f3a;
+	color : #ffffff;
+	font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
+	height: 6rem;
+	text-align: center;	
+	padding: 20px 0;
+}
