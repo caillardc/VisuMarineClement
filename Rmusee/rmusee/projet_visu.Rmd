@@ -94,7 +94,7 @@ amPlot(as.character(c(2013:2018)),
 ```
 
 ## Data table
-Ensuite, pour approfondire nous voulions nous intéresser aux départements. C'est pourquoi pour chaque départements nous avons construit un data table avec une première colonne correspondant au nom du musée, une deuxième colonne qui est la ville et une troisème colonne avec le nombre de visiteur en 2018. L'utilisateur sélectionne un département et cela met à jour le data table. Il peut également effectué une recherche dans celui-ci. 
+Ensuite, pour approfondir nous voulions nous intéresser aux départements. C'est pourquoi pour chaque départements nous avons construit un data table avec une première colonne correspondant au nom du musée, une deuxième colonne qui est la ville et une troisème colonne avec le nombre de visiteur en 2018. L'utilisateur sélectionne un département et cela met à jour le data table. Il peut également effectué une recherche dans celui-ci. 
 
 Nous aurions pû également faire deux boxplots par département représentant le nombre de visite gratuite et payante, mais il y a déjà deux graphiques sur la page. Nous ne voulions pas encombrer le site avec trop de graphique, c'est pourquoi nous avons préféré le data table.
 ```{r, warning=F, echo=F}
