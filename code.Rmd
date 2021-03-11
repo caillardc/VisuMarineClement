@@ -49,9 +49,6 @@ musee <- inner_join(loc_musee, museefreq, by = c('ref_musee'='id'))
 
 write.csv(musee, 'musee.csv', fileEncoding = "UTF-8")
 
-
-ifelse(TRUE, a <- as.vector(t(musee[musee$region != "", "ref_musee"])),a <-  "")
-a <- if(T) as.vector(t(musee[musee$region != "", "ref_musee"])) else ""
          
 
 ```
