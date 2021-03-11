@@ -12,6 +12,9 @@ library(DT)
 library(rAmCharts)
 library(leaflet)
 
+
+source('SCRIPT/rmusee.R')
+musee = recupdata()
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
     

@@ -1,21 +1,11 @@
----
-title: "code"
-author: "Clément Caillard et Marine Hamelin"
-date: "10/03/2021"
-output: html_document
----
-# Librairies
-```{r}
 library(tidyverse)
 library(leaflet)
-library(tidyverse)
-```
 
-# Nettoyage des données
-```{r, message=F, warning=F}
-setwd('.')
+
+
+#Tri des données 
 net <- function(data){
-  museefreq = read_csv(data, locale=locale())
+  museefreq = read_csv(paste('DATA/',data, sep=''), locale=locale())
   date = museefreq$year[1]
   museefreq <- museefreq %>%
     filter(country == 'France', status == 'open') %>%
@@ -33,27 +23,25 @@ net <- function(data){
   museefreq[,gdate] <-  as.numeric(apply(as.matrix(museefreq[,gdate]),1, substring,first=9))
     museefreq[,tdate] <- museefreq[,pdate] + museefreq[,gdate]
   return(museefreq)
-} 
-
-lmusee = paste('frequentation-musees-de-france-',2018:2013,'.csv',sep = '')
-list.musee = lapply(lmusee, net)
-museefreq <- list.musee[[1]]
-for (i in 2:(length(list.musee))){
-  museefreq <- inner_join(museefreq, list.musee[[i]])
 }
 
-museefreq <-  museefreq %>% filter(lon > (-20) & lon < 25)
-loc_musee <- read_delim('liste-et-localisation-des-musees-de-france.csv',delim = ';')
-loc_musee <- loc_musee %>% select(c(2,6,8,14,15))
-musee <- inner_join(loc_musee, museefreq, by = c('ref_musee'='id'))
+recupdata <- function(){
+  lmusee = paste('frequentation-musees-de-france-',2018:2013,'.csv',sep = '')
+  list.musee = lapply(lmusee, net)
+  museefreq <- list.musee[[1]]
+  for (i in 2:(length(list.musee))){
+    museefreq <- inner_join(museefreq, list.musee[[i]])
+  }
+  
+  museefreq <-  museefreq %>% filter(lon > (-20) & lon < 25)
+  loc_musee <- read_delim(paste('DATA/','liste-et-localisation-des-musees-de-france.csv', sep=''),delim = ';')
+  loc_musee <- loc_musee %>% select(c(2,6,8,14,15))
+  musee <- inner_join(loc_musee, museefreq, by = c('ref_musee'='id'))
+  return(musee)
+}
 
-write.csv(musee, 'musee.csv', fileEncoding = "UTF-8")
+#Carte
 
-         
-
-```
-# Carte leaflet
-```{r}
 testurl <- function(texte){
   for (chaine in strsplit(texte, " ")[[1]]){
     if(grepl("^http" ,chaine)){return(chaine)}
@@ -98,9 +86,9 @@ h4{color:#0078A8}
   popup = popup %>% paste('<p><strong>Total visiteur en 2018: </strong>', rdt$total.2018, "</p></body>", sep="")
   return(popup)
 }
-```
 
-```{r}
+## Geocode 
+
 if (!(require(jsonlite))) install.packages("jsonlite")
 mygeocode <- function(adresses){
   # adresses est un vecteur contenant toutes les adresses sous forme de chaine de caracteres
@@ -121,6 +109,5 @@ mygeocode <- function(adresses){
   colnames(tableau) <- c("lon","lat")
   return(tableau)
 }
-```
 
-
+         

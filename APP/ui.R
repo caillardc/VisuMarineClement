@@ -15,6 +15,8 @@ library(shinyWidgets)
 library(leaflet)
 library(shinythemes)
 
+source('SCRIPT/rmusee.R')
+musee = recupdata()
 
 # Define UI for application that draws a histogram
 shinyUI(bootstrapPage(
