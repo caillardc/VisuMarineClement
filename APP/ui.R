@@ -60,7 +60,7 @@ shinyUI(bootstrapPage(
                  
                  leafletOutput(outputId = "map", width="100%", height="100%"),
                  absolutePanel(id = "controls", bottom = 100, right = 55, width = 250, fixed=TRUE, height = "auto",
-                               sliderInput("visite", "Visiteurs en 2018 de 0 à plus de 1M", min(musee$total.2018), 1000000,
+                               sliderInput("visite", "Visiteurs en 2018 de zéro à plus de 1M", min(musee$total.2018), 1000000,
                                            value = c(min(musee$total.2018), 1000000), step = 100),
                                textInput('zoom', "Zoom sur une adresse", value = ""),
                                actionButton("button", "Recherche"),

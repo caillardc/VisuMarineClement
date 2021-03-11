@@ -85,6 +85,8 @@ shinyServer(function(input, output, session) {
                                         iconWidth = 20, iconHeight = 95), layerId = ~ref_musee) %>% 
                 removeMarkerFromCluster(remove, 'cluster')
         }else{leafletProxy("map", data = musee) %>% clearMarkerClusters()}
+    }) 
+    observe({
         if(ladresse()!=""){
             geo = mygeocode(ladresse())
             leafletProxy("map", data = musee) %>% setView(geo[1],geo[2], 12)

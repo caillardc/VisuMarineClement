@@ -1,0 +1,12 @@
+name: musee
+title: musee
+username:
+account: caillardhamelin
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3773838
+bundleId: 4331023
+url: https://caillardhamelin.shinyapps.io/musee/
+when: 1615469745.55739
+asMultiple: FALSE
+asStatic: FALSE
