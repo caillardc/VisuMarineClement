@@ -8,7 +8,7 @@ output: html_document
 ```{r}
 library(leaflet)
 library(tidyverse)
-setwd("C:/Users/caill/Dropbox/M1/S2/R/VISUDATA/Projet/VisuMarineClement")
+# setwd("C:/Users/caill/Dropbox/M1/S2/R/VISUDATA/Projet/VisuMarineClement")
 # musee <- read.table('musee.csv', sep=",", header=T)
 ```
 ```{r}
@@ -21,7 +21,7 @@ testurl <- function(texte){
 }
 
 fpopup <- function(rdt){
-  rdt = data.frame(t(rdt))
+  rdt <-  data.frame(t(rdt))
   popup = "
   <head>
  <style>
@@ -40,8 +40,8 @@ h4{color:#0078A8}
  </style>
 </head><body>"
   title = paste('<h4>', as.character(rdt$name), "</h4>")
-  if (testurl(rdt$sitweb) != F){
-    popup = popup %>% paste("<a href='", testurl(rdt$sitweb), "'>", title, "</a>", sep ="")
+  if (testurl(as.character(rdt$sitweb)) != F){
+    popup = popup %>% paste("<a href='", testurl(as.character(rdt$sitweb)), "'>", title, "</a>", sep ="")
   }else{
     popup = popup %>% paste(title)
   } 
