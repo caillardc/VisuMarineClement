@@ -1,31 +1,22 @@
-#
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+
 
 library(shiny)
 library(DT)
 library(rAmCharts)
 library(leaflet)
 
-
 source('SCRIPT/rmusee.R')
 musee = recupdata()
-# Define server logic required to draw a histogram
+
+
 shinyServer(function(input, output, session) {
     
     output$histo <- renderAmCharts({
         
-        # generate bins based on input$bins from ui.R
         col.annee = paste('total.',as.numeric(input$annee), sep = '')
         x  <- musee[musee$region == as.character(input$region),]
         x <- x %>% group_by(departement) %>% summarise(somme = sum(.data[[col.annee]]))
         
-        # draw the histogram with the specified number of bins
         amBarplot(x = 'departement', y = 'somme', data = x, col = '#26C4EC',
                zoom = T, labelRotation = 45, main = paste("Nombre de visiteurs en", input$region,' en ', input$annee))
         
@@ -56,7 +47,9 @@ shinyServer(function(input, output, session) {
                ylab = 'Nombre de visites',
                xlab = 'Année',
                lwd = 2)})
+    
     #Leaflet 
+    
     selectmusee <- reactive({
         if(input$visite[2]==1000000){musee[musee$total.2018 >= input$visite[1],]}else{
             musee[musee$total.2018 >= input$visite[1] & musee$total.2018 <= input$visite[2],]

@@ -1,9 +1,7 @@
 library(tidyverse)
 library(leaflet)
 
-
-
-#Tri des données 
+#Tri des donnÃ©es 
 net <- function(data){
   museefreq = read_csv(paste('DATA/',data, sep=''), locale=locale())
   date = museefreq$year[1]
@@ -64,7 +62,8 @@ h4{color:none;}
 #txt{margin-left:5px;}
 #ad, #txt{
     display: inline-block;
-    vertical-align: top;}
+    vertical-align: top;
+    margin-bottom: 0;}
 .leaflet-container p{color:#293133;}
  </style>
  <meta charset='UTF-8'>
@@ -82,7 +81,7 @@ h4{color:none;}
   }else{
     popup = popup %>% paste('<p id="txt">', rdt$ad , "<br>", rdt$postal_code, " ", rdt$city,"</p>", sep="")
   }
-  popup = popup %>% paste('<p><strong>Téléphone: </strong>', rdt$telephone1, "</p>", sep="")
+  popup = popup %>% paste('<p><strong>TÃ©lÃ©phone: </strong>', rdt$telephone1, "</p>", sep="")
   popup = popup %>% paste('<p><strong>Total visiteur en 2018: </strong>', rdt$total.2018, "</p></body>", sep="")
   return(popup)
 }
@@ -94,7 +93,7 @@ mygeocode <- function(adresses){
   # adresses est un vecteur contenant toutes les adresses sous forme de chaine de caracteres
   nominatim_osm <- function(address = NULL){
     ## details: http://wiki.openstreetmap.org/wiki/Nominatim
-    ## fonction nominatim_osm proposée par D.Kisler
+    ## fonction nominatim_osm proposÃ©e par D.Kisler
     if(suppressWarnings(is.null(address)))  return(data.frame())
     tryCatch(
       d <- jsonlite::fromJSON(

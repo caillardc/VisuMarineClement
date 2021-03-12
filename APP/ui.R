@@ -1,11 +1,3 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
 
 library(shiny)
 library(tidyverse)
@@ -18,7 +10,6 @@ library(shinythemes)
 source('SCRIPT/rmusee.R')
 musee = recupdata()
 
-# Define UI for application that draws a histogram
 shinyUI(bootstrapPage(
   tags$head(HTML("<title>Musée en France</title><link rel='icon' type='image/gif/png' href='musee.jpg'>")),
   theme = shinytheme("sandstone"),
@@ -32,7 +23,7 @@ shinyUI(bootstrapPage(
                        
                        div(id = 'welcome',
                            tags$h1("Bienvenue sur notre application shiny"),
-                           tags$p("Elle nous permet de visualiser des données sur les musées de France que nous avons receuillies dans une base.")
+                           tags$p("Elle nous permet de visualiser des données sur les musées de France que nous avons recueillies dans une base.")
                        )),
                    div(class = "container", id ="carte",
                        div(class = "bloctxt", div(id = 'cartetxt',
@@ -40,7 +31,7 @@ shinyUI(bootstrapPage(
                                                   p("Chaque musée est représenté au sein de clusters sur une carte interactive.
                                                     La carte comporte un panel de contrôle superposé qui permet de nombreuses fonctionnalités.
                                                     On peut par exemple voir uniquement les musées avec un certain nombre de visiteurs,
-                                                    ou voir uniquement les musées d'une certaine région, ou bien même zoomer sur une adresse desirée"))),
+                                                    ou voire uniquement les musées d'une certaine région, ou bien même zoomer sur une adresse désirée"))),
                        div(class= "img", img(src = 'carte.PNG'))
                    ),
                    div(class = "container",
@@ -63,7 +54,7 @@ shinyUI(bootstrapPage(
                  
                  leafletOutput(outputId = "map", width="100%", height="100%"),
                  absolutePanel(id = "controls", bottom = 100, right = 55, width = 250, fixed=TRUE, height = "auto",
-                               sliderInput("visite", "Visiteurs en 2018 de zéro à plus de 1M", min(musee$total.2018), 1000000,
+                               sliderInput("visite", "Visiteurs en 2018 de zéro à plus d'un million", min(musee$total.2018), 1000000,
                                            value = c(min(musee$total.2018), 1000000), step = 100),
                                textInput('zoom', "Zoom sur une adresse", value = ""),
                                actionButton("button", "Recherche"),
