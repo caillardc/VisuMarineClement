@@ -37,7 +37,10 @@ shinyUI(bootstrapPage(
                    div(class = "container", id ="carte",
                        div(class = "bloctxt", div(id = 'cartetxt',
                                                   h2('Représentation cartographique'),
-                                                  p('Chaque musée est représenté sous forme de cluster sur une carte interactive.'))),
+                                                  p("Chaque musée est représenté au sein de clusters sur une carte interactive.
+                                                    La carte comporte un panel de contrôle superposé qui permet de nombreuses fonctionnalités.
+                                                    On peut par exemple voir uniquement les musées avec un certain nombre de visiteurs,
+                                                    ou voir uniquement les musées d'une certaine région, ou bien même zoomer sur une adresse desirée"))),
                        div(class= "img", img(src = 'carte.PNG'))
                    ),
                    div(class = "container",
