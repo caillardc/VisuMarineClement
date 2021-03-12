@@ -12,6 +12,7 @@ library(rAmCharts)
 library(tidyverse)
 library(DT)
 library(leaflet)
+source("SCRIPT/rmusee.R")
 ```
 # Présentation du sujet et des données
 ## Le sujet
@@ -23,7 +24,7 @@ Tout d'abord, nous voulions travailler sur des données qui nous permettraient d
 Comme s'est écrit ci-dessus nous avons joint plusieurs tables pour construire la base de données finale. Tout d'abord pour chaque années nous avions une table qui ressemblait à ça:
 
 ```{r warning = F, echo = F, message = F}
-table <- read_csv('../../frequentation-musees-de-france-2018.csv', locale=locale())
+table <- read_csv('DATA/frequentation-musees-de-france-2018.csv', locale=locale())
 
 table
 ```
@@ -38,9 +39,11 @@ table[1:5, 'stats']
 ```
 Pour réussir à visulaliser les données il fallait donc restructurer cette colonne. Ainsi pour chaque table nous avons créé une colonne gratuit, payant et total. Nous ne trouvions pas pertinent de garder la date. Cependant nous spécifions l'année pour qu'une fois avoir fusionné toutes les tables, on puisse savoir à quelle années les données correspondent.
 
-```{r, echo = F, warning = F}
-don <- read.table('../../musee.csv', header = T, sep = ',', dec = '.', encoding = 'UTF-8')
+```{r, include = FALSE}
+don <- recupdata()
+```
 
+```{r, echo = F, warning = F}
 don[1:5, c(17,18,19)]
 ```
 Pour finir, Nous avons sélectionné les musées qui se sitauient uniquement dans la métropole française. Ensuite, nous avons fusionner cette base de données avec la base où est renseignée la région, le département, le numéro de téléphone et le site web. Nous gardons que les colonnes corespondant à ces informations. Nous avons donc la base de données finalisés suivantes:
@@ -128,4 +131,41 @@ leaflet() %>% addTiles() %>%
   addMarkers(data= don[don$lat <= 45.7,], ~lon, ~lat)
 ```
 
-Comme on le voit sur cet exemple cela nous permet une meilleure visibilité de nos point et sur les endroit de la cartes ou le nombres de point est le plus important.
+Comme on le voit sur cet exemple, cela nous permet une meilleure visibilité de nos points et sur les endroits de la carte ou le nombre de points est le plus important.
+
+## Icon
+
+Nous avons ensuite eu l'idée de modifier les markers pour en mettre des personnalisés nous avons donc cherché sur internet comment faire et nous avons trouvé plusieurs types de personnalisation possible. Nous avons opté pour un icon de batiment antique qui nous trouvons represente bien l'image que l'on se fait d'un musée.
+
+
+```{r}
+icondemusee = icons(
+  iconUrl = "www/museum.svg",
+  iconWidth = 20, iconHeight = 95
+)
+
+
+leaflet() %>% addTiles() %>% addMarkers(data=don[2,], ~lon, ~lat, icon = icondemusee)
+```
+
+## Popup
+
+Avec les informations de notre base de données nous avons décider qu'il serait important d'en regrouper quelques une dans un popup. Nous avons donc choisi de mettre lorsque que l'information est présente: le numéro de téléphone du musée, le sites web, le nom du musée, l'adresse et le nombre total de visiteur en 2018. Pour avoir une meilleur présentation nous avons choisis de crée se popup avec du language HTML/CSS et pour ce faire nous avons crée une fonction nommé fpopup (cf. rmusee.R) qui pour un musée renvoit le code HTML a rentrer dans la variable popup de la fonctions addMarkers(). Notre fonction fpopup est adapté pour un entrée sous forme de apply. Elle permet de gerer les données manquantes et les URL sous diverse forme grace à une autre fonction testurl().
+
+Par exemples pour notre premier musée la fonction fpopup renvoie:
+
+```{r, warning=F, echo=F}
+popup.musee <- apply(don[1,], 1, fpopup)
+popup.musee
+```
+
+
+Ce qui donne au format HTML quelque chose comme ceci:
+
+
+
+------------------
+```{r, warning=F, echo=F}
+htmltools::HTML(popup.musee)
+```
+-----------------

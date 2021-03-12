@@ -5,8 +5,8 @@ account: caillardhamelin
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3773838
-bundleId: 4331023
+bundleId: 4331215
 url: https://caillardhamelin.shinyapps.io/musee/
-when: 1615469745.55739
+when: 1615472944.20893
 asMultiple: FALSE
 asStatic: FALSE

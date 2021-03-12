@@ -3,7 +3,7 @@ library(leaflet)
 
 
 
-#Tri des donnÃ©es 
+#Tri des données 
 net <- function(data){
   museefreq = read_csv(paste('DATA/',data, sep=''), locale=locale())
   date = museefreq$year[1]
@@ -57,21 +57,21 @@ fpopup <- function(rdt){
  <style>
  .leaflet-container a{
   text-decoration:none;
-  margin-bottom:1;}
-    a:hover{color:Black}
+  color:#0078A8}
+a:hover{color:Black}
 
-h4{color:#0078A8}
+h4{color:none;}
 #txt{margin-left:5px;}
 #ad, #txt{
     display: inline-block;
-    vertical-align: top;
-    margin-bottom: 0;}
+    vertical-align: top;}
 .leaflet-container p{color:#293133;}
  </style>
+ <meta charset='UTF-8'>
 </head><body>"
   title = paste('<h4>', as.character(rdt$name), "</h4>")
   if (testurl(rdt$sitweb) != F){
-    popup = popup %>% paste("<a href='", testurl(rdt$sitweb), "'>", title, "</a>", sep ="")
+    popup = popup %>% paste("<a href='", testurl(rdt$sitweb), "' target=_blank>", title, "</a>", sep ="")
   }else{
     popup = popup %>% paste(title)
   } 
@@ -82,7 +82,7 @@ h4{color:#0078A8}
   }else{
     popup = popup %>% paste('<p id="txt">', rdt$ad , "<br>", rdt$postal_code, " ", rdt$city,"</p>", sep="")
   }
-  popup = popup %>% paste('<p><strong>TÃ©lÃ©phone: </strong>', rdt$telephone1, "</p>", sep="")
+  popup = popup %>% paste('<p><strong>Téléphone: </strong>', rdt$telephone1, "</p>", sep="")
   popup = popup %>% paste('<p><strong>Total visiteur en 2018: </strong>', rdt$total.2018, "</p></body>", sep="")
   return(popup)
 }
@@ -94,7 +94,7 @@ mygeocode <- function(adresses){
   # adresses est un vecteur contenant toutes les adresses sous forme de chaine de caracteres
   nominatim_osm <- function(address = NULL){
     ## details: http://wiki.openstreetmap.org/wiki/Nominatim
-    ## fonction nominatim_osm proposÃ©e par D.Kisler
+    ## fonction nominatim_osm proposée par D.Kisler
     if(suppressWarnings(is.null(address)))  return(data.frame())
     tryCatch(
       d <- jsonlite::fromJSON(
@@ -109,5 +109,4 @@ mygeocode <- function(adresses){
   colnames(tableau) <- c("lon","lat")
   return(tableau)
 }
-
-         
+        
