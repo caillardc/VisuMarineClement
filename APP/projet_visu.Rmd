@@ -1,7 +1,6 @@
 ---
 title: "Visualisation Musées de France"
 author: "Clément Caillard et Marine Hamelin"
-date: "08/03/2021"
 output:
   html_document:
     df_print: paged
@@ -20,11 +19,11 @@ Application shiny : https://caillardhamelin.shinyapps.io/musee/
 
 ## Le sujet
 
-Tout d'abord, nous voulions travailler sur des données qui nous permettraient de construire une carte. Il a fallu qu'on trouve une base de données avec des longitudes et des latitudes. De plus nous voulions des données en rapport avec la culture. Donc nous sommes allés sur le site de data gouv et nous avons trouvé des bases de données sur la fréquentation des musées de France. Elles correspondaient à ce que nous recherchions. Cependant, il y en avait plusieurs, en effet il y avait une base pour chaque année entre 2013 et 2018. Nous avons donc décidé de réunir toutes les bases. Néanmoins nous n'étions pas assez satisfait, les seuls données quantitatives exceptés les données spatiales étaient celles correspondant à la fréquentation. De plus, les données qualitatives intéressantes étaient le nom des musées et son adresse. Nous voulions aussi faire une partie sur des représentations graphique et pas seulement une carte. Nous avons eu l'idée de regarder la fréquentation des musées par région et département. Donc, nous avons trouvé une autre base de données avec l'identifant du musée identique à celui de la base initiale, le département et la région et en bonus le site web du musée. Ainsi, avec cette nouvelle base on peut approfondire la visualisation des données.
+Tout d'abord, nous voulions travailler sur des données qui nous permettraient de construire une carte. Il a fallu qu'on trouve une base de données avec des longitudes et des latitudes. De plus nous voulions des données en rapport avec la culture. Donc nous sommes allés sur le site https://www.data.gouv.fr/fr/ et nous avons trouvé des bases de données sur la fréquentation des musées de France. Elles correspondaient à ce que nous recherchions. Cependant, il y en avait plusieurs, en effet il y avait une base pour chaque année entre 2013 et 2018. Nous avons donc décidé de réunir toutes les bases. Néanmoins nous n'étions pas assez satisfait, les seules données quantitatives exceptés les données spatiales étaient celles correspondant à la fréquentation. De plus, les données qualitatives intéressantes étaient les noms des musées et son adresse. Nous voulions aussi faire une partie sur des représentations graphiques et pas seulement une carte. Nous avons eu l'idée de regarder la fréquentation des musées par région et département. Donc, nous avons trouvé une autre base de données avec l'identifiant du musée identique à celui de la base initiale, le département et la région et en bonus le site web du musée. Ainsi, avec cette nouvelle base on peut approfondir la visualisation des données.
 
 ## Nettoyage des données
 
-Comme s'est écrit ci-dessus nous avons joint plusieurs tables pour construire la base de données finale. Tout d'abord pour chaque années nous avions une table qui ressemblait à ça:
+Comme s'est écrit ci-dessus nous avons joint plusieurs tables pour construire la base de données finale. Tout d'abord pour chaque année nous avions une table qui ressemblait à ça:
 
 ```{r warning = F, echo = F, message = F}
 table <- read_csv('DATA/frequentation-musees-de-france-2018.csv', locale=locale())
@@ -34,13 +33,13 @@ table
 Nous avons commencé par supprimer les colonnes qui ne nous intéressaient pas. Ce sont les suivantes: website, phone, fax, description, tags, year. Elles ne contenaient que des valeurs manquantes. 
 
 
-La partie qui nous intéressait le plus était la colonne stats car elle contient la fréquentation. Or, elle est mal structurée puisque c'est une chaîne de caractère qui regroupe le nombre d'entrée payante, le nombre d'entrée gratuite et un label date.
+La partie qui nous intéressait le plus était la colonne stats car elle contient la fréquentation. Or, elle est mal structurée puisque c'est une chaîne de caractères qui regroupe le nombre d'entrées payantes, le nombre d'entrées gratuites et un label date.
 
 ```{r, echo = F, warning = F}
 table[1:5, 'stats']
 
 ```
-Pour réussir à visulaliser les données il fallait donc restructurer cette colonne. Ainsi pour chaque table nous avons créé une colonne gratuit, payant et total. Nous ne trouvions pas pertinent de garder la date. Cependant nous spécifions l'année pour qu'une fois avoir fusionné toutes les tables, on puisse savoir à quelle années les données correspondent.
+Pour réussir à visualiser les données il fallait donc restructurer cette colonne. Ainsi pour chaque table nous avons créé une colonne gratuit, payant et total. Nous ne trouvions pas pertinent de garder la date. Cependant nous spécifions l'année pour qu'une fois avoir fusionné toutes les tables, on puisse savoir à quelles années les données correspondent.
 
 ```{r, include = FALSE}
 don <- recupdata()
@@ -49,7 +48,7 @@ don <- recupdata()
 ```{r, echo = F, warning = F}
 don[1:5, c(17,18,19)]
 ```
-Pour finir, Nous avons sélectionné les musées qui se sitauient uniquement dans la métropole française. Ensuite, nous avons fusionner cette base de données avec la base où est renseignée la région, le département, le numéro de téléphone et le site web. Nous gardons que les colonnes corespondant à ces informations. Nous avons donc la base de données finalisés suivantes:
+Pour finir, Nous avons sélectionné les musées qui se situaient uniquement dans la métropole française. Ensuite, nous avons fusionné cette base de données avec la base où est renseignée la région, le département, le numéro de téléphone et le site web. Nous ne gardons que les colonnes correspondant à ces informations. Nous avons donc la base de données finalisés suivantes:
 
 ```{r, warning=F, echo=F}
 head(don)
@@ -59,15 +58,15 @@ La base de données finale contient 693 lignes et 34 colonnes.
 
 
 
-# Représentation graphiques
+# Représentation graphique
 
-Cette page contient deux graphiques et un data table. Le but de cette application est de représenté la fréquentation des musées de France de 2013 à 2018.
+Cette page contient deux graphiques et un data table. Le but de cette application est de représenter la fréquentation des musées de France de 2013 à 2018.
 
 ## Barplot
 
-Tout d'abord nous avons trouvé pertinent de représenter les données avec un barplot. L'utilisateur sélectionne une région et une année, ensuite le barplot illustre pour chaque département de la région le nombre de visiteurs total de l'année sélectionnée .C'est pourquoi, nous avons trouvé ça pertinent de mettre un slider qui permet de choisir l'année et une bar déroulante pour sélectionner la région. La bar déroulante reprend les régions qui se trouve dans la colonne region de la base de données. Donc on a groupé les données par département de la région sélectionnée et fait la somme du nombre de visite qu'on retrouve dans les colonnes total.année. Ainsi, en abscisse nous retrouvons les départements de la région et en ordonnée le nombre de visiteurs d'une année. 
+Tout d'abord nous avons trouvé pertinent de représenter les données avec un barplot. L'utilisateur sélectionne une région et une année, ensuite le barplot illustre pour chaque département de la région le nombre de visiteurs total de l'année sélectionnée. C'est pourquoi, nous avons trouvé ça pertinent de mettre un slider qui permet de choisir l'année et une barre déroulante pour sélectionner la région. La bar déroulante reprend les régions qui se trouve dans la colonne region de la base de données. Donc on a groupé les données par département de la région sélectionnée et fait la somme du nombre de visites qu'on retrouve dans les colonnes total.année. Ainsi, en abscisse nous retrouvons les départements de la région et en ordonnée le nombre de visiteurs d'une année. 
 
-Nous hésitions au début à mettre un histogramme représentant la densité de visite pour une région mais cela aurait effacé les informations sur les départements que nous trouvions pertinentes à représenter. Par exemple on peut voir sur le graphe ci-dessous, en Bretagne en 2018 il y a eu 395 581 milles personnes qui ont visité des musées dans le Finistère.
+Nous hésitions au début à mettre un histogramme représentant la densité de visite pour une région mais cela aurait effacé les informations sur les départements que nous trouvions pertinents à représenter. Par exemple on peut voir sur le graphe ci-dessous, en Bretagne en 2018 il y a eu 395 581 mille personnes qui ont visité des musées dans le Finistère.
 
 ```{r message = F, echo = F}
 x  <- don[don$region == as.character('BRETAGNE'),]
@@ -79,9 +78,9 @@ amBarplot(x = 'departement', y = 'somme', data = x, col = '#26C4EC',
 
 ```
 ## Courbe d'évolution
-Le deuxième graphique en bas décrit l'évolution des visiteurs sur la période 2013-2018 pour une région. Donc en haut quand l'utilisateur sélectionne une région, le graphique se met à jour et montre une courbe qui relit chaque point correspondant à la fréquentation des musées pour chaque année. Donc on a groupé les données par région et on a calculé la somme des visites par années pour chaque région. Ensuite nous gardons la ligne correspondant à la région sélectionnée par l'utilisateur.
+Le deuxième graphique en bas décrit l'évolution des visiteurs sur la période 2013-2018 pour une région. Donc en haut quand l'utilisateur sélectionne une région, le graphique se met à jour et montre une courbe qui relit chaque point correspondant à la fréquentation des musées pour chaque année. Donc on a groupé les données par région et on a calculé la somme des visites par année pour chaque région. Ensuite nous gardons la ligne correspondant à la région sélectionnée par l'utilisateur.
 
-Ici, nous trouvions intéréssant de comparer la fréquentation entre chaque année puisque le barplot ne représente que les données pour une année. 
+Ici, nous trouvions intéressant de comparer la fréquentation entre chaque année puisque le barplot ne représente que les données pour une année. 
 ```{r echo = F, message = F}
 x <- don %>% group_by(region) %>% summarise(sum(total.2013),
                                             sum(total.2014),
@@ -101,9 +100,9 @@ amPlot(as.character(c(2013:2018)),
 ```
 
 ## Data table
-Ensuite, pour approfondir nous voulions nous intéresser aux départements. C'est pourquoi pour chaque départements nous avons construit un data table avec une première colonne correspondant au nom du musée, une deuxième colonne qui est la ville et une troisème colonne avec le nombre de visiteur en 2018. L'utilisateur sélectionne un département et cela met à jour le data table. Il peut également effectué une recherche dans celui-ci. 
+Ensuite, pour approfondir nous voulions nous intéresser aux départements. C'est pourquoi pour chaque département nous avons construit un data table avec une première colonne correspondant au nom du musée, une deuxième colonne qui est la ville et une troisième colonne avec le nombre de visiteur en 2018. L'utilisateur sélectionne un département et cela met à jour le data table. Il peut également effectuer une recherche dans celui-ci. 
 
-Nous aurions pû également faire deux boxplots par département représentant le nombre de visite gratuite et payante, mais il y a déjà deux graphiques sur la page. Nous ne voulions pas encombrer le site avec trop de graphique, c'est pourquoi nous avons préféré le data table.
+Nous aurions pû également faire deux boxplots par département représentant le nombre de visites gratuites et payantes, mais il y a déjà deux graphiques sur la page. Nous ne voulions pas encombrer le site avec trop de graphique, c'est pourquoi nous avons préféré le data table.
 ```{r, warning=F, echo=F}
 datatable(don[don$departement == 'PARIS', c(7,11,19)],
           colnames = c('Nom', 'Ville', '2018') ,
@@ -120,11 +119,11 @@ datatable(don[don$departement == 'PARIS', c(7,11,19)],
 
 # Cartographie
 
-Nous avons décidé de faire une carte interactive qui représente les musées de France. Pour ce faire nous avons lu beaucoup de documentation sur des applications shiny utilisant leaflet déjà créées. Nous avons découvert de nombreuse possibilité comme par exemple la possibilité d'utiliser des boutons pour supprimer ou ajouter des points, imbriquer directement le panel de controle sur la carte. De plus l'un de nous a effectuer un TER sur la visualisation de données en python l'année dernière. Cela nous à fait un apport supplémentaire de connaissance sur les possibilité de leaflet.
+Nous avons décidé de faire une carte interactive qui représente les musées de France. Pour ce faire nous avons lu beaucoup de documentation sur des applications shiny déjà créées utilisant leaflet . Nous avons découvert de nombreuses possibilités comme par exemple la possibilité d'utiliser des boutons pour supprimer ou ajouter des points, imbriquer directement le panel de contrôle sur la carte. De plus, l'un de nous a effectué un TER sur la visualisation de données en python l'année dernière. Cela nous a fait un apport supplémentaire de connaissance sur les possibilités de leaflet.
 
 ## Les clusters
 
-Nous avons décidé d'utiliser le système de cluster proposé par leaflet pour pouvoir representer nos points. 
+Nous avons décidé d'utiliser le système de cluster proposé par leaflet pour pouvoir représenter nos points. 
 
 
 ```{r}
@@ -134,11 +133,11 @@ leaflet() %>% addTiles() %>%
   addMarkers(data= don[don$lat <= 45.7,], ~lon, ~lat)
 ```
 
-Comme on le voit sur cet exemple, cela nous permet une meilleure visibilité de nos points et sur les endroits de la carte ou le nombre de points est le plus important.
+Comme on le voit sur cet exemple, cela nous permet une meilleure visibilité de nos points, notamment sur les endroits de la carte ou le nombre de points est le plus important.
 
 ## Icon
 
-Nous avons ensuite eu l'idée de modifier les markers pour en mettre des personnalisés nous avons donc cherché sur internet comment faire et nous avons trouvé plusieurs types de personnalisation possible. Nous avons opté pour un icon de batiment antique qui nous trouvons represente bien l'image que l'on se fait d'un musée.
+Nous avons ensuite eu l'idée de modifier les markers pour en mettre des personnalisés, nous avons donc cherché sur internet comment faire et nous avons trouvé plusieurs types de personnalisation possible. Nous avons opté pour un icon d'un bâtiment antique qui représente bien l'image que l'on se fait d'un musée.
 
 
 ```{r}
@@ -153,7 +152,7 @@ leaflet() %>% addTiles() %>% addMarkers(data=don[2,], ~lon, ~lat, icon = icondem
 
 ## Popup
 
-Avec les informations de notre base de données nous avons décider qu'il serait important d'en regrouper quelques une dans un popup. Nous avons donc choisi de mettre lorsque que l'information est présente: le numéro de téléphone du musée, le sites web, le nom du musée, l'adresse et le nombre total de visiteur en 2018. Pour avoir une meilleur présentation nous avons choisis de crée se popup avec du language HTML/CSS et pour ce faire nous avons crée une fonction nommé fpopup (cf. rmusee.R) qui pour un musée renvoit le code HTML a rentrer dans la variable popup de la fonctions addMarkers(). Notre fonction fpopup est adapté pour un entrée sous forme de apply. Elle permet de gerer les données manquantes et les URL sous diverse forme grace à une autre fonction testurl().
+Avec les informations de notre base de données nous avons décidé qu'il serait important d'en regrouper quelques une dans un popup. Nous avons donc choisi de mettre lorsque l'information est présente: le numéro de téléphone du musée, le site web, le nom du musée, l'adresse et le nombre total de visiteur en 2018. Pour avoir une meilleure présentation nous avons choisi de créer ce popup avec du language HTML/CSS et pour ce faire nous avons créé une fonction nommée fpopup (cf. rmusee.R) qui pour un musée renvoit le code HTML à rentrer dans la variable popup de la fonction addMarkers(). Notre fonction fpopup est adaptée pour un entrée sous forme de apply. Elle permet de gérer les données manquantes et les URL sous diverses formes grace à une autre fonction testurl().
 
 Par exemples pour notre premier musée la fonction fpopup renvoie:
 
